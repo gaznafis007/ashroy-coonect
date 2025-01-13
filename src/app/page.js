@@ -1,13 +1,11 @@
+import Header from "@/components/Header/Header";
 import { ThreeDCardDemo } from "@/components/ThreeDCardDemo";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-4 font-[family-name:var(--font-geist-sans)]">
-      <h2 className="font-semibold capitalize text-slate-900 text-6xl text-center">ashroy the helping hand</h2>
-      <div className="mt-6">
-        
+      <div className="mt-6 min-h-screen">
+        <Header/>
       </div>
-    </div>
   );
 }
