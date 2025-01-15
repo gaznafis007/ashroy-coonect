@@ -13,6 +13,7 @@ const Register = () => {
         const city = form.city.value;
         const country = form.country.value;
         const dob = form.dob.value;
+        const role = form.role.value;
         const password = form.password.value;
         const description = form.description.value;
         const userInfo = {
@@ -22,10 +23,22 @@ const Register = () => {
             city,
             country,
             dob,
+            role,
             password,
             description
         } 
-        console.log(userInfo)
+        console.log(userInfo);
+        // fetch('/api/register',{
+        //   method: 'POST',
+        //   headers: {
+        //     'content-type': 'application/json'
+        //   },
+        //   body: JSON.stringify(userInfo)
+        // })
+        // .then(res => res.json())
+        // .then(data =>{
+        //   console.log(data)
+        // })
     }
     const handleGoogleLogin = () =>{}
   return (
@@ -84,6 +97,16 @@ const Register = () => {
               name="dob"
               className="border border-slate-400 px-4 py-2 rounded-md"
             />
+          </div>
+          <div className="flex flex-col space-y-3">
+            <label className="font-semibold text-sm">What you want to be?</label>
+            <select
+              name="role"
+              className="border border-slate-400 px-4 py-2 rounded-md"
+            >
+              <option value="sponsor">Sponsor</option>
+              <option value="volunteer">Volunteer</option>
+            </select>
           </div>
           <div className="flex flex-col space-y-3">
             <label className="font-semibold text-sm">Tell us about yourself</label>
