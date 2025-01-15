@@ -28,17 +28,17 @@ const Register = () => {
             description
         } 
         console.log(userInfo);
-        // fetch('/api/register',{
-        //   method: 'POST',
-        //   headers: {
-        //     'content-type': 'application/json'
-        //   },
-        //   body: JSON.stringify(userInfo)
-        // })
-        // .then(res => res.json())
-        // .then(data =>{
-        //   console.log(data)
-        // })
+        fetch('/api/register',{
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(userInfo)
+        })
+        .then(res => res.json())
+        .then(data =>{
+          console.log(data)
+        })
     }
     const handleGoogleLogin = () =>{}
   return (
