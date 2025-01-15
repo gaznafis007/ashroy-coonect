@@ -1,9 +1,11 @@
 'use client';
 import Button from "@/components/Button/Button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Register = () => {
+  const router = useRouter()
     const handleSubmit = (event) =>{
         event.preventDefault();
         const form = event.target;
@@ -27,7 +29,7 @@ const Register = () => {
             password,
             description
         } 
-        console.log(userInfo);
+        // console.log(userInfo);
         fetch('/api/register',{
           method: 'POST',
           headers: {
@@ -38,6 +40,10 @@ const Register = () => {
         .then(res => res.json())
         .then(data =>{
           console.log(data)
+          if(data.acknowledged){
+            form.reset()
+          router.push('/login')
+          }
         })
     }
     const handleGoogleLogin = () =>{}
