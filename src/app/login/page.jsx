@@ -1,18 +1,43 @@
 "use client";
 import Button from "@/components/Button/Button";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Login = () => {
-  const handleSubmit = (event) => {
+  const session = useSession()
+  const router = useRouter()
+  // console.log(session)
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
     console.log(email, password);
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false
+    })
+    // console.log(res)
+    if(res.ok){
+      console.log(session)
+      event.target.reset()
+    }
   };
-  const handleGoogleLogin = () => {
-    console.log("google");
+  const handleGoogleLogin = async () => {
+    // console.log("google");
+    const res = await signIn('google', {redirect: false});
+    // console.log(res)
+    if(res.ok){
+      console.log(res);
+      console.log(session);
+      router.push('/')
+    }
   };
+  if(session?.status === 'authenticated'){
+    return router.push('/')
+  }
   return (
     <div className="flex items-center justify-center space-y-8">
       <div className="flex flex-col space-y-8 items-center justify-center mx-4 my-4 shadow-md rounded-xl px-8 py-12 ">
@@ -47,7 +72,7 @@ const Login = () => {
           </p>
         </form>
         <button
-          onClick={handleGoogleLogin}
+          onClick={async () => await handleGoogleLogin()}
           className="px-4 py-2 block w-full shadow-sm border border-slate-200 rounded-md text-sm font-semibold"
         >
           Login with <span className="text-green-600">Google</span>

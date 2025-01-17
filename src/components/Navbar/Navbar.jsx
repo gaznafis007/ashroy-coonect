@@ -6,9 +6,12 @@ import { useRouter } from "next/navigation";
 import { navItems } from "@/variables/variables";
 import { FaBars } from "react-icons/fa";
 import Modal from "../Modal/Modal";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const session = useSession();
+  console.log(session)
   const handleInvolve = () =>{
     router.push('/login')
   }
@@ -28,7 +31,14 @@ const Navbar = () => {
         ))}
       </div>
       <div className="hidden md:block">
-        <Button handler={handleInvolve}>Get Involved</Button>
+      {
+          session?.status === 'authenticated' ? (
+            <div className="flex flex-row space-x-2 items-center">
+            <p className="font-semibold">{session?.data?.user?.name}</p>
+            <Button handler={signOut}>Log out</Button>
+            </div>
+          ) : <Button handler={handleInvolve}>Get Involved</Button>
+        }
       </div>
       <FaBars onClick={() =>setOpen(true)} className="text-xl text-yellow-400 cursor-pointer md:hidden"/>
     {
@@ -43,7 +53,14 @@ const Navbar = () => {
             {item?.name}
           </Link>
         ))}
-        <Button handler={handleInvolve}>Get Involved</Button>
+        {
+          session?.status === 'authenticated' ? (
+            <div className="flex flex-col space-y-2">
+            <p className="font-semibold">{session?.data?.user?.name}</p>
+            <Button handler={signOut}>Log out</Button>
+            </div>
+          ) : <Button handler={handleInvolve}>Get Involved</Button>
+        }
       </div>
         </Modal>
     }

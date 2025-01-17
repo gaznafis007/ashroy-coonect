@@ -1,64 +1,70 @@
 import { connectDB } from "@/lib/connectDB";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google"
-
-const { default: NextAuth } = require("next-auth");
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
-    session: {
-        strategy: 'jwt',
-        maxAge: 24 * 60 * 60
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+  },
+  providers: [
+    Credentials({
+      credentials: {
+        email: {},
+        password: {},
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials;
+        if (!email || !password) {
+          return null;
+        } else {
+          const db = await connectDB();
+          const query = { email: email };
+          const user = await db.collection("user").findOne(query);
+          console.log(user);
+          if (!user) {
+            return null;
+          } else {
+            if (password === user?.password) {
+              return user;
+            } else {
+              return null;
+            }
+          }
+        }
+      },
+    }),
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        const db = await connectDB();
+        const userCollection = await db.collection("user");
+        const query = { email: user?.email };
+        const registeredUser = await userCollection.findOne(query);
+        if (!registeredUser) {
+          const result = await userCollection.insertOne(user);
+          if (result.acknowledged) {
+            return true;
+          }else{
+            return false;
+          }
+        } else {
+          return true;
+        }
+      } else {
+        return user;
+      }
     },
-    providers:[
-        CredentialsProvider({
-            credentials:{
-                email: {},
-                password: {}
-            },
-            async authorize(credentials){
-                const {email, password} = credentials;
-                if(!email || !password){
-                    return null
-                }else{
-                    const db = await connectDB();
-                    const userCollection = await db.collection('user');
-                    const user = userCollection.findOne({email: email});
-                    if(!user){
-                        return null;
-                    }else{
-                        if(password == user?.password){
-                            return user
-                        }
-                    }
-                }
-            }
-        }),
-        GoogleProvider({
-            clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET
-        })
-    ],
-    callbacks: {
-        async signIn (user, account){
-        if(account.provider == 'google'){
-            const db = await connectDB();
-            const userCollection = await db.collection('user');
-            const registeredUser = await userCollection.findOne({email: user?.email});
-            if(registeredUser){
-                return user
-            }else{
-                const res = await userCollection.insertOne(user);
-                if(res.acknowledged){
-                    return user
-                }else{
-                    return {error: 'please try again'}
-                }
-            }
-        }else{
-            return user
-        }
-        }
-    }
-})
+  },
+  pages: {
+    signIn: "/login",
+  },
+});
 
-export {handler as GET, handler as POST}
+export { handler as GET, handler as POST };

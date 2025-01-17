@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useState } from 'react';
+import {SessionProvider} from 'next-auth/react'
 
 export const AuthContext = createContext();
 const AuthProvider = ({children}) => {
