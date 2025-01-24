@@ -1,39 +1,31 @@
-'use client'
-import React from "react";
-import headerImage from "../../assets/images/team-ashroy.jpg";
-import { useRouter } from "next/navigation";
-import Button from "../Button/Button";
+"use client"
+import { motion } from "framer-motion"
+import Button from "../Button/Button"
 
-const Header = () => {
-  const router = useRouter();
-  const handleRoute = (path) => {
-    router.push(path);
-  };
+
+export default function Hero() {
   return (
-    <header
-    style={{
-      background: `linear-gradient(44deg, rgba(0,0,0, 0.8), rgba(0,0,0, 0.1)), url(${headerImage.src})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover'
-    }}
-      className="md:rounded-xl mt-4 md:mt-8 md:mx-4 px-8 py-32 md:py-56"
-    >
-      <div className="flex flex-col space-y-3 md:items-center md:justify-center mt-8">
-        <h1 className="text-5xl text-white font-bold">
-          Empowering Smile with <span className="text-yellow-400">Ashroy.</span>
-        </h1>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
-          <Button handler={() => handleRoute("/login")}>Join us</Button>
-          <Button
-            handler={() => handleRoute("/donate")}
-            bg={"bg-transparent border border-yellow-400 hover:bg-yellow-400"}
-          >
-            Donate
+    <section className="bg-primary text-primary-foreground py-20">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl text-white md:text-6xl font-bold mb-4">Empowering Smile with <span className="text-yellow-400">Ashroy</span></h1>
+          <p className="text-xl mb-8">Join us in our mission to create positive change in our community.</p>
+          <div className="flex flex-row space-x-2 md:space-x-4 justify-center">
+          <Button>
+            Donate Now
           </Button>
-        </div>
+          <Button style={'border border-yellow-400 text-yellow-400'} bg={'bg-transparent'} >
+            Join us
+          </Button>
+          </div>
+        </motion.div>
       </div>
-    </header>
-  );
-};
+    </section>
+  )
+}
 
-export default Header;
