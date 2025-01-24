@@ -23,9 +23,9 @@ export default function Stats() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="text-center"
             >
-              <p className="text-4xl font-bold text-yellow-400 mb-2">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">
                 <ShinyText text={stat.value}/>
-              </p>
+              </div>
               <p className="text-gray-600">{stat.label}</p>
             </motion.div>
           ))}

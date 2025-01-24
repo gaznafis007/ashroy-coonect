@@ -33,7 +33,7 @@ export default function UpcomingEvents() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card>
+              <Card className="overflow-hidden shadow-lg hover:shadow-xl hover:border-yellow-100 hover:shadow-yellow-100 transition-shadow duration-300">
                 <CardHeader>
                   <CardTitle>{event.title}</CardTitle>
                   <CardDescription>{event.date}</CardDescription>
