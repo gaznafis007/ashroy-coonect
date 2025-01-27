@@ -1,12 +1,13 @@
 "use client"
 import { motion } from "framer-motion"
-import ShinyText from "../ShineyText/ShineyText"
+import CounterEffect from "../CounterEffect/CounterEffect"
+
 
 const stats = [
-  { label: "Lives Impacted", value: "10,000+" },
-  { label: "Volunteers", value: "500+" },
-  { label: "Projects Completed", value: "100+" },
-  { label: "Communities Served", value: "50+" },
+  { label: "Lives Impacted", value:10000 },
+  { label: "Volunteers", value: 500 },
+  { label: "Projects Completed", value: 100 },
+  { label: "Communities Served", value: 50 },
 ]
 
 export default function Stats() {
@@ -24,7 +25,7 @@ export default function Stats() {
               className="text-center"
             >
               <div className="text-4xl font-bold text-yellow-400 mb-2">
-                <ShinyText text={stat.value}/>
+                <CounterEffect target={stat?.value} duration={1}/>
               </div>
               <p className="text-gray-600">{stat.label}</p>
             </motion.div>
