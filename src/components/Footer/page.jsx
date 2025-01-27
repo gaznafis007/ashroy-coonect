@@ -16,9 +16,9 @@ const Footer = () => {
           A non profiting organization works to put smile privileges everyone
         </p>
         <div className="space-x-2 text-white  text-xl flex flex-row">
-          <a className="hover:text-yellow-400" href="">
+          <Link className="hover:text-yellow-400" href="https://www.facebook.com/help.ashroy">
             <FaFacebook />
-          </a>
+          </Link>
           <a className="hover:text-yellow-400" href="">
             <FaInstagram />
           </a>
