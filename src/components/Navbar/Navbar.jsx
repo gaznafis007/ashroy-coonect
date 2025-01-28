@@ -56,7 +56,7 @@ const Navbar = () => {
         {
           session?.status === 'authenticated' ? (
             <div className="flex flex-col space-y-2">
-            <p className="font-semibold">{session?.data?.user?.name}</p>
+            <p className="font-semibold capitalize">{session?.data?.user?.name}</p>
             <Button handler={signOut}>Log out</Button>
             </div>
           ) : <Button handler={handleInvolve}>Get Involved</Button>
