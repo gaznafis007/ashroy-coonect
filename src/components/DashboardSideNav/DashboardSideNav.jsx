@@ -55,7 +55,7 @@ const DashboardSideNav = () => {
   }
   return (
     <motion.aside
-      className={`w-64 bg-yellow-500 text-white`}
+      className={`hidden md:block w-64 bg-yellow-500 text-white`}
       initial={false}
       animate={{ width: "256px" }}
     >

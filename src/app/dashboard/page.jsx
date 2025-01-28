@@ -26,13 +26,14 @@ import Button from "@/components/Button/Button";
 import DashboardLayout from "@/components/DashboardLayout/DashboardLayout";
 import { DashboardCard } from "@/components/DashboardCard/DashboardCard";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const router = useRouter();
   useEffect(() => {
     if (status === "authenticated" && session?.user?.email) {
       fetch(`/api/users?email=${session.user.email}`)
@@ -66,32 +67,31 @@ const Dashboard = () => {
   }
   const adminActions = [
     {
-        name: "all members",
-        path: "/dashboard/allMembers",
-        icon: Users
+      name: "all members",
+      path: "/dashboard/allMembers",
+      icon: Users,
     },
     {
-        name: "add new project",
-        path: "/dashboard/newProject",
-        icon: FolderPlus
+      name: "add new project",
+      path: "/dashboard/newProject",
+      icon: FolderPlus,
     },
     {
-        name: "add new event",
-        path: "/dashboard/newEvent",
-        icon: CalendarPlus
+      name: "add new event",
+      path: "/dashboard/newEvent",
+      icon: CalendarPlus,
     },
     {
-        name: "feedbacks",
-        path: "/dashboard/feedbacks",
-        icon: MessageSquareQuote
+      name: "feedbacks",
+      path: "/dashboard/feedbacks",
+      icon: MessageSquareQuote,
     },
     {
-        name: "manage events",
-        path: "/dashboard/manageEvents",
-        icon: CalendarSync
+      name: "manage events",
+      path: "/dashboard/manageEvents",
+      icon: CalendarSync,
     },
-
-  ]
+  ];
   return (
     <DashboardLayout user={user}>
       <motion.div
@@ -109,50 +109,58 @@ const Dashboard = () => {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {user?.role === "sponsor" && (
-            <>
-              <DashboardCard
-                title="Total Donations"
-                value="$12,345"
-                icon={<DollarSign className="h-8 w-8 text-green-500" />}
-                description="10% increase from last month"
-              />
-              <DashboardCard
-                title="Projects Supported"
-                value="23"
-                icon={<Briefcase className="h-8 w-8 text-blue-500" />}
-                description="2 new projects this month"
-              />
-              <DashboardCard
-                title="Lives Impacted"
-                value="1,234"
-                icon={<Heart className="h-8 w-8 text-red-500" />}
-                description="Through your contributions"
-              />
-            </>
-          )}
-          {user?.role === "volunteer" && (
-            <>
-              <DashboardCard
-                title="Hours Volunteered"
-                value="120"
-                icon={<Clock className="h-8 w-8 text-blue-500" />}
-                description="15 hours this week"
-              />
-              <DashboardCard
-                title="Upcoming Events"
-                value="5"
-                icon={<Calendar className="h-8 w-8 text-purple-500" />}
-                description="Next event in 3 days"
-              />
-              <DashboardCard
-                title="Team Members"
-                value="12"
-                icon={<Users className="h-8 w-8 text-yellow-500" />}
-                description="2 new members this month"
-              />
-            </>
-          )}
+          {user?.role !== "admin" &&
+            (user?.status === "approved" ? (
+              user?.role === "sponsor" &&
+              (<>
+                <DashboardCard
+                  title="Total Donations"
+                  value="$12,345"
+                  icon={<DollarSign className="h-8 w-8 text-green-500" />}
+                  description="10% increase from last month"
+                />
+                <DashboardCard
+                  title="Projects Supported"
+                  value="23"
+                  icon={<Briefcase className="h-8 w-8 text-blue-500" />}
+                  description="2 new projects this month"
+                />
+                <DashboardCard
+                  title="Lives Impacted"
+                  value="1,234"
+                  icon={<Heart className="h-8 w-8 text-red-500" />}
+                  description="Through your contributions"
+                />
+              </>)(
+                user?.role === "volunteer" && (
+                  <>
+                    <DashboardCard
+                      title="Hours Volunteered"
+                      value="120"
+                      icon={<Clock className="h-8 w-8 text-blue-500" />}
+                      description="15 hours this week"
+                    />
+                    <DashboardCard
+                      title="Upcoming Events"
+                      value="5"
+                      icon={<Calendar className="h-8 w-8 text-purple-500" />}
+                      description="Next event in 3 days"
+                    />
+                    <DashboardCard
+                      title="Team Members"
+                      value="12"
+                      icon={<Users className="h-8 w-8 text-yellow-500" />}
+                      description="2 new members this month"
+                    />
+                  </>
+                )
+              )
+            ) : (
+              <h2 className="text-4xl">
+                You are not approved as a {user?.role}
+              </h2>
+            ))}
+
           {user?.role === "admin" && (
             <>
               <DashboardCard
@@ -184,9 +192,8 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {
-            user?.role === 'admin' && (
-                <Card>
+          {user?.role === "admin" && (
+            <Card>
               <CardHeader>
                 <CardTitle>All actions</CardTitle>
               </CardHeader>
@@ -195,10 +202,13 @@ const Dashboard = () => {
                   {adminActions.map((item, index) => (
                     <li key={index} className="flex items-center space-x-4">
                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
-                      <item.icon className="h-6 w-6 text-yellow-600" />
+                        <item.icon className="h-6 w-6 text-yellow-600" />
                       </div>
                       <div>
-                        <Link href={item.path} className="text-xl font-semibold capitalize">
+                        <Link
+                          href={item.path}
+                          className="text-xl font-semibold capitalize"
+                        >
                           {item?.name}
                         </Link>
                       </div>
@@ -207,35 +217,35 @@ const Dashboard = () => {
                 </ul>
               </CardContent>
             </Card>
-            )
-          }
-          {(user?.role === "volunteer" || user?.role === "sponsor") && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activities</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {[1, 2, 3].map((_, index) => (
-                    <li key={index} className="flex items-center space-x-4">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
-                        <Heart className="h-5 w-5 text-yellow-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {user?.role === "sponsor" && "Donated to Project X"}
-                          {user?.role === "volunteer" &&
-                            "Volunteered for Event Y"}
-                          {/* {user?.role === "admin" && "Approved new volunteer application"} */}
-                        </p>
-                        <p className="text-xs text-gray-500">2 hours ago</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
           )}
+          {user?.status === "approved" &&
+            (user?.role === "volunteer" || user?.role === "sponsor") && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Activities</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    {[1, 2, 3].map((_, index) => (
+                      <li key={index} className="flex items-center space-x-4">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
+                          <Heart className="h-5 w-5 text-yellow-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">
+                            {user?.role === "sponsor" && "Donated to Project X"}
+                            {user?.role === "volunteer" &&
+                              "Volunteered for Event Y"}
+                            {/* {user?.role === "admin" && "Approved new volunteer application"} */}
+                          </p>
+                          <p className="text-xs text-gray-500">2 hours ago</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
 
           <Card>
             <CardHeader>
@@ -243,27 +253,42 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                {user?.role === "sponsor" && (
-                  <>
-                    <Button>Make a Donation</Button>
-                    <Button variant="outline">View Impact Report</Button>
-                    <Button variant="outline">Explore Projects</Button>
-                    <Button variant="outline">Contact Support</Button>
-                  </>
-                )}
-                {user?.role === "volunteer" && (
-                  <>
-                    <Button>Sign Up for Event</Button>
-                    <Button variant="outline">Log Hours</Button>
-                    <Button variant="outline">View Schedule</Button>
-                    <Button variant="outline">Team Chat</Button>
-                  </>
-                )}
+                {user?.role !== "admin" &&
+                  (user?.status ? (
+                    (
+                      user?.role === "sponsor" && (
+                        <>
+                          <Button>Make a Donation</Button>
+                          <Button variant="outline">View Impact Report</Button>
+                          <Button variant="outline">Explore Projects</Button>
+                          <Button variant="outline">Contact Support</Button>
+                        </>
+                      )
+                    )(
+                      user?.role === "volunteer" && (
+                        <>
+                          <Button>Sign Up for Event</Button>
+                          <Button variant="outline">Log Hours</Button>
+                          <Button variant="outline">View Schedule</Button>
+                          <Button variant="outline">Team Chat</Button>
+                        </>
+                      )
+                    )
+                  ) : (
+                    <p className="mt-4">
+                      Will appear after your request as a {user?.role} accepted
+                    </p>
+                  ))}
+
                 {user?.role === "admin" && (
                   <>
                     <Button>Create New Event</Button>
                     <Button>Create Upcoming Event</Button>
-                    <Button>Manage All Members</Button>
+                    <Button
+                      handler={() => router.push("/dashboard/allMembers")}
+                    >
+                      Manage All Members
+                    </Button>
                     <Button>Generate Reports</Button>
                   </>
                 )}
@@ -277,48 +302,48 @@ const Dashboard = () => {
 };
 
 const DashboardSkeleton = () => (
-  <DashboardLayout user={{ name: "Loading...", role: "Loading..." }}>
-    <div className="space-y-6">
-      <Skeleton className="h-12 w-3/4" />
-      <Skeleton className="h-4 w-1/2" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[1, 2, 3].map((i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <Skeleton className="h-4 w-1/3" />
-              <Skeleton className="h-8 w-8 rounded-full" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-8 w-1/2 mb-2" />
-              <Skeleton className="h-4 w-2/3" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[1, 2].map((i) => (
-          <Card key={i}>
-            <CardHeader>
-              <Skeleton className="h-6 w-1/4" />
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[1, 2, 3].map((j) => (
-                  <div key={j} className="flex items-center space-x-4">
-                    <Skeleton className="h-10 w-10 rounded-full" />
-                    <div>
-                      <Skeleton className="h-4 w-3/4 mb-2" />
-                      <Skeleton className="h-3 w-1/2" />
+    <DashboardLayout user={{ name: "Loading...", role: "Loading..." }}>
+      <div className="space-y-6">
+        <Skeleton className="h-12 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-1/2 mb-2" />
+                <Skeleton className="h-4 w-2/3" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <Card key={i}>
+              <CardHeader>
+                <Skeleton className="h-6 w-1/4" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((j) => (
+                    <div key={j} className="flex items-center space-x-4">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div>
+                        <Skeleton className="h-4 w-3/4 mb-2" />
+                        <Skeleton className="h-3 w-1/2" />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
-  </DashboardLayout>
-);
+    </DashboardLayout>
+  );
 
 export default Dashboard;
