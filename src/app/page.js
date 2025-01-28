@@ -1,3 +1,5 @@
+import Feedback from "@/components/Feedback/Feedback";
+import Gallery from "@/components/Gallery/Gallery";
 import Header from "@/components/Header/Header";
 import MotivationSection from "@/components/MotivationSection/MotivationSection";
 import OurEvents from "@/components/OurEvents/OurEvents";
@@ -15,6 +17,8 @@ export default function Home() {
         <Stats/>
         <UpcomingEvents/>
         <MotivationSection/>
+        <Gallery/>
+        <Feedback/>
       </div>
   );
 }
