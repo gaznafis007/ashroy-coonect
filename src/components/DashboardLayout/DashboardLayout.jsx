@@ -33,7 +33,7 @@ const DashboardLayout = ({ children, user }) => {
         animate={{ width: isSidebarOpen ? "256px" : "0px" }}
       >
         <div className="flex items-center justify-between p-4">
-          <Link href="/dashboard" className="text-2xl font-bold">
+          <Link href="/" className="text-2xl font-bold">
             Ashroy
           </Link>
           <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>

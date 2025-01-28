@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Button from "../Button/Button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { navItems } from "@/variables/variables";
 import { FaBars } from "react-icons/fa";
 import Modal from "../Modal/Modal";
@@ -15,9 +15,10 @@ const Navbar = () => {
   const handleInvolve = () =>{
     router.push('/login')
   }
+  const pathname = usePathname();
   const [open, setOpen] = useState(false)
   return (
-    <nav className="flex flex-row items-center justify-between px-6 py-3">
+    <nav className={`items-center justify-between px-6 py-3 ${pathname === '/dashboard' ? 'hidden' : 'flex flex-row '}`}>
       <Link href={'/'} className="text-4xl text-yellow-400 font-semibold">Ashroy</Link>
       <div className="hidden md:block space-x-3">
         {navItems.map((item, idx) => (

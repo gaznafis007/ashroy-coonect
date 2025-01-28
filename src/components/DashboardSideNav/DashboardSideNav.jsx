@@ -5,6 +5,7 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { Home, Users, Calendar, BarChart, Settings, LogOut, Menu, X } from "lucide-react"
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 const dashboardItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
@@ -13,7 +14,10 @@ const dashboardItems = [
     { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
   ]
-
+const handleSignOut = () =>{
+    router.push("/")
+    signOut();
+}
 const DashboardSideNav = () => {
     const router = useRouter()
     return (
@@ -23,7 +27,7 @@ const DashboardSideNav = () => {
         animate={{ width: "256px" }}
       >
         <div className="flex items-center justify-between p-4">
-          <Link href="/dashboard" className="text-2xl font-bold">
+          <Link href="/" className="text-2xl font-bold">
             Ashroy
           </Link>
         </div>
@@ -45,7 +49,7 @@ const DashboardSideNav = () => {
           <Button
             variant="outline"
             className="text-white border-white bg-transparent hover:bg-yellow-600"
-            onClick={() => router.push("/logout")}
+            onClick={handleSignOut}
           >
             <LogOut className="h-5 w-5 mr-2" /> Log Out
           </Button>

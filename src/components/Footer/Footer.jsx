@@ -1,12 +1,15 @@
+'use client';
 import { navItems } from "@/variables/variables";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
+  const pathname = usePathname()
   return (
-    <footer className="bg-slate-900 px-16 py-8 md:px-24 md:py-12 mt-8 md:mt-16">
+    <footer className={pathname === '/dashboard' ? 'hidden' : 'bg-slate-900 px-16 py-8 md:px-24 md:py-12'}>
       <div className="flex flex-row justify-between items-center">
       <div className="space-y-3">
         <Link href={"/"} className="text-6xl text-yellow-400 font-semibold">

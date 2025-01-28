@@ -1,62 +1,111 @@
-"use client"
+"use client";
 
-import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { BarChart, Calendar, Users, DollarSign, Heart, Briefcase, Clock } from "lucide-react"
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  BarChart,
+  Calendar,
+  Users,
+  DollarSign,
+  Heart,
+  Briefcase,
+  Clock,
+  ExternalLink,
+  CalendarPlus,
+  FolderPlus,
+  MessageSquareQuote,
+  CalendarSync,
+} from "lucide-react";
 
-import { ErrorMessage } from "@/components/Error/ErrorMessage"
-import { UnauthenticatedMessage } from "@/components/Unauthenticated/UnauthenticatedMessage"
-import Button from "@/components/Button/Button"
-import DashboardLayout from "@/components/DashboardLayout/DashboardLayout"
-import { DashboardCard } from "@/components/DashboardCard/DashboardCard"
+import { ErrorMessage } from "@/components/Error/ErrorMessage";
+import { UnauthenticatedMessage } from "@/components/Unauthenticated/UnauthenticatedMessage";
+import Button from "@/components/Button/Button";
+import DashboardLayout from "@/components/DashboardLayout/DashboardLayout";
+import { DashboardCard } from "@/components/DashboardCard/DashboardCard";
+import Link from "next/link";
 
 const Dashboard = () => {
-  const { data: session, status } = useSession()
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (status === "authenticated" && session?.user?.email) {
       fetch(`/api/users?email=${session.user.email}`)
         .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch user data")
-          return res.json()
+          if (!res.ok) throw new Error("Failed to fetch user data");
+          return res.json();
         })
         .then((data) => {
-          setUser(data)
-          setLoading(false)
+          setUser(data);
+          setLoading(false);
         })
         .catch((err) => {
-          setError(err.message)
-          setLoading(false)
-        })
+          setError(err.message);
+          setLoading(false);
+        });
     } else if (status === "unauthenticated") {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [status, session?.user?.email])
+  }, [status, session?.user?.email]);
 
   if (status === "loading" || loading) {
-    return <DashboardSkeleton />
+    return <DashboardSkeleton />;
   }
 
   if (error) {
-    return <ErrorMessage message={error} />
+    return <ErrorMessage message={error} />;
   }
 
   if (status === "unauthenticated") {
-    return <UnauthenticatedMessage />
+    return <UnauthenticatedMessage />;
   }
+  const adminActions = [
+    {
+        name: "all members",
+        path: "/dashboard/allMembers",
+        icon: Users
+    },
+    {
+        name: "add new project",
+        path: "/dashboard/newProject",
+        icon: FolderPlus
+    },
+    {
+        name: "add new event",
+        path: "/dashboard/newEvent",
+        icon: CalendarPlus
+    },
+    {
+        name: "feedbacks",
+        path: "/dashboard/feedbacks",
+        icon: MessageSquareQuote
+    },
+    {
+        name: "manage events",
+        path: "/dashboard/manageEvents",
+        icon: CalendarSync
+    },
 
+  ]
   return (
     <DashboardLayout user={user}>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <header className="mb-8">
-          <h1 className="text-4xl font-bold text-yellow-600 mb-2">Welcome, {user?.name}!</h1>
-          <p className="text-gray-600">Here's an overview of your {user?.role} dashboard.</p>
+          <h1 className="text-4xl font-bold text-yellow-600 mb-2">
+            Welcome, {user?.name}!
+          </h1>
+          <p className="text-gray-600">
+            Here's an overview of your {user?.role} dashboard.
+          </p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -113,10 +162,16 @@ const Dashboard = () => {
                 description="15 new volunteers this month"
               />
               <DashboardCard
-                title="Active Projects"
+                title="Total Sponsors"
+                value="6"
+                icon={<Users className="h-8 w-8 text-green-500" />}
+                description="15 new volunteers this month"
+              />
+              <DashboardCard
+                title="Total Events"
                 value="18"
                 icon={<Briefcase className="h-8 w-8 text-green-500" />}
-                description="3 projects completed this month"
+                description="3 projects completed this year"
               />
               <DashboardCard
                 title="Total Donations"
@@ -129,30 +184,58 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{user?.role === "admin" ? "Recent Activities" : "Your Recent Activities"}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-4">
-                {[1, 2, 3].map((_, index) => (
-                  <li key={index} className="flex items-center space-x-4">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
-                      <Heart className="h-5 w-5 text-yellow-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {user?.role === "sponsor" && "Donated to Project X"}
-                        {user?.role === "volunteer" && "Volunteered for Event Y"}
-                        {user?.role === "admin" && "Approved new volunteer application"}
-                      </p>
-                      <p className="text-xs text-gray-500">2 hours ago</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+          {
+            user?.role === 'admin' && (
+                <Card>
+              <CardHeader>
+                <CardTitle>All actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {adminActions.map((item, index) => (
+                    <li key={index} className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
+                      <item.icon className="h-6 w-6 text-yellow-600" />
+                      </div>
+                      <div>
+                        <Link href={item.path} className="text-xl font-semibold capitalize">
+                          {item?.name}
+                        </Link>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+            )
+          }
+          {(user?.role === "volunteer" || user?.role === "sponsor") && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {[1, 2, 3].map((_, index) => (
+                    <li key={index} className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center">
+                        <Heart className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">
+                          {user?.role === "sponsor" && "Donated to Project X"}
+                          {user?.role === "volunteer" &&
+                            "Volunteered for Event Y"}
+                          {/* {user?.role === "admin" && "Approved new volunteer application"} */}
+                        </p>
+                        <p className="text-xs text-gray-500">2 hours ago</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>
@@ -178,10 +261,10 @@ const Dashboard = () => {
                 )}
                 {user?.role === "admin" && (
                   <>
-                    <Button>Create New Project</Button>
-                    <Button variant="outline">Manage Volunteers</Button>
-                    <Button variant="outline">Financial Overview</Button>
-                    <Button variant="outline">Generate Reports</Button>
+                    <Button>Create New Event</Button>
+                    <Button>Create Upcoming Event</Button>
+                    <Button>Manage All Members</Button>
+                    <Button>Generate Reports</Button>
                   </>
                 )}
               </div>
@@ -190,10 +273,8 @@ const Dashboard = () => {
         </div>
       </motion.div>
     </DashboardLayout>
-  )
-}
-
-
+  );
+};
 
 const DashboardSkeleton = () => (
   <DashboardLayout user={{ name: "Loading...", role: "Loading..." }}>
@@ -238,7 +319,6 @@ const DashboardSkeleton = () => (
       </div>
     </div>
   </DashboardLayout>
-)
+);
 
-export default Dashboard
-
+export default Dashboard;
