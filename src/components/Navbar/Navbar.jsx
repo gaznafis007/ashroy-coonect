@@ -42,7 +42,7 @@ const Navbar = () => {
       </div>
       <FaBars onClick={() =>setOpen(true)} className="text-xl text-yellow-400 cursor-pointer md:hidden"/>
     {
-        open && <Modal setOpen={setOpen} position={'top-4 right-4'}>
+        open && <Modal setOpen={setOpen} position={'top-4 right-4 z-20'}>
             <div className="flex flex-col space-y-3">
         {navItems.map((item, idx) => (
           <Link
