@@ -11,7 +11,7 @@ import { signOut, useSession } from "next-auth/react";
 const Navbar = () => {
   const router = useRouter();
   const session = useSession();
-  console.log(session)
+  // console.log(session)
   const handleInvolve = () =>{
     router.push('/login')
   }

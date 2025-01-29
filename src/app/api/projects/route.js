@@ -1,9 +1,10 @@
 import { connectDB } from "@/lib/connectDB"
 import { NextResponse } from "next/server"
 
-export const POST = async ({req}) =>{
+export const POST = async (req) =>{
     try{
         const project = await req.json();
+        // console.log(project)
         if(!project){
             return NextResponse.json({message: 'no project to add'})
         }else{

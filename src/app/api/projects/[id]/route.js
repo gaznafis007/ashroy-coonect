@@ -4,11 +4,12 @@ import { NextResponse } from "next/server";
 
 export const PUT = async (req, {params}) =>{
     try{
-        const id = params.id;
-    const query = {_id: ObjectId(id)}
+        const {id} = await params;
+    const query = {_id: new ObjectId(id)}
     const db = await connectDB();
     const projectCollection = await db.collection('projects');
     const project = await req.json();
+    console.log(project)
     const updatedDoc = {
         $set:{
             ...project
@@ -22,7 +23,7 @@ export const PUT = async (req, {params}) =>{
     }
 }
 export const DELETE = async(req,{params}) =>{
-    const id = params.id;
+    const id =  params.id;
     const query = {_id: new ObjectId(id)}
     const db = await connectDB();
     const projectCollection = await db.collection('projects');
