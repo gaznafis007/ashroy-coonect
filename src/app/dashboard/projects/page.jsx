@@ -2,15 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { ProjectForm } from "@/components/ProjectForm/ProjectForm"
-
-
-
-
+import { ProjectCard } from "@/components/ProjectCard/ProjectCard"
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([])

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
 import { Edit, Trash } from "lucide-react"
 
@@ -17,7 +17,7 @@ export const ProjectCard = ({ project, onEdit, onDelete }) => (
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-600 mb-4">{project.description}</p>
-          <p className="font-semibold">Goal: {project.goal}BDT</p>
+          <p className="font-semibold">Goal: {project.goal} BDT</p>
         </CardContent>
         <CardFooter className="justify-end space-x-2">
           <Button variant="outline" size="icon" onClick={() => onEdit(project)}>

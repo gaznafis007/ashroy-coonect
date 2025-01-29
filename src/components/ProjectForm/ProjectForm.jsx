@@ -1,9 +1,9 @@
 'use client';
 
-const { useForm } = require("react-hook-form")
-const { Input } = require("../ui/input");
-const { Textarea } = require("../ui/textarea");
-const { Button } = require("../ui/button");
+import { useForm } from "react-hook-form";
+import { Button } from "../ui/button"
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 export const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
   const {
