@@ -2,92 +2,15 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useForm } from "react-hook-form"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Loader2, Plus, Edit, Trash } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { ProjectForm } from "@/components/ProjectForm/ProjectForm"
 
-// const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
-//   const {
-//     register,
-//     handleSubmit,
-//     reset,
-//     formState: { errors },
-//   } = useForm({
-//     defaultValues: initialData || {},
-//   })
 
-//   const submitHandler = (data) => {
-//     onSubmit(data)
-//     if (!initialData) reset() // Only reset if it's a new project form
-//   }
 
-//   return (
-//     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
-//       <Input {...register("title", { required: "Title is required" })} defaultValue={initialData?.title} placeholder="Project Title" />
-//       {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
 
-//       <Textarea
-//         {...register("description", { required: "Description is required" })}
-//         placeholder="Project Description"
-//         defaultValue={initialData?.description}
-//       />
-//       {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
-
-//       <Input
-//         {...register("goal", {
-//           required: "Goal amount is required",
-//           pattern: { value: /^\d+$/, message: "Please enter a valid number" },
-//         })}
-//         placeholder="Goal Amount"
-//         type="number"
-//         defaultValue={initialData?.goal}
-//       />
-//       {errors.goal && <p className="text-red-500 text-sm">{errors.goal.message}</p>}
-
-//       <div className="flex justify-end space-x-2">
-//         {onCancel && (
-//           <Button type="button" variant="outline" onClick={onCancel}>
-//             Cancel
-//           </Button>
-//         )}
-//         <Button type="submit">{initialData ? "Update Project" : "Add Project"}</Button>
-//       </div>
-//     </form>
-//   )
-// }
-
-const ProjectCard = ({ project, onEdit, onDelete }) => (
-  <motion.div
-    layout
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -50 }}
-    transition={{ duration: 0.3 }}
-  >
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle className="capitalize">{project.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-gray-600 mb-4">{project.description}</p>
-        <p className="font-semibold">Goal: {project.goal}BDT</p>
-      </CardContent>
-      <CardFooter className="justify-end space-x-2">
-        <Button variant="outline" size="icon" onClick={() => onEdit(project)}>
-          <Edit className="h-4 w-4" />
-        </Button>
-        <Button variant="destructive" size="icon" onClick={() => onDelete(project._id)}>
-          <Trash className="h-4 w-4" />
-        </Button>
-      </CardFooter>
-    </Card>
-  </motion.div>
-)
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([])
