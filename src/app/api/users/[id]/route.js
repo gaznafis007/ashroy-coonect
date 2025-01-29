@@ -15,6 +15,6 @@ export const DELETE = async (req, {params}) =>{
     const db = await connectDB();
     const userCollection = await db.collection('user');
     const query = {_id: new ObjectId(id)}
-    const result = await userCollection.deleteOe(query);
+    const result = await userCollection.deleteOne(query);
     return NextResponse.json(result)
 }

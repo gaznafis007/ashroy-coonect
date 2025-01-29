@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { motion } from "framer-motion"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -10,31 +10,23 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { CheckCircle, XCircle, Info } from "lucide-react"
+import { CheckCircle, XCircle, Info, AlertTriangle } from "lucide-react"
+
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/hooks/use-toast"
 
 const AllMembers = () => {
   const [users, setUsers] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [userToRemove, setUserToRemove] = useState(null)
+  const { toast } = useToast()
 
-  const handleApprove = (userId) => {
-    // Implement approve logic here
-    fetch(`/api/users?email=${userId}`,{
-        method: 'PUT',
-        headers: {
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({status: 'approved'})
-    })
-    .then(res=> res.json())
-    .then(data =>{
-        console.log(data)
-    })
-    console.log(`Approved user ${userId}`)
-  }
-  useEffect(() => {
+  const fetchUsers = useCallback(() => {
+    setLoading(true)
     fetch("/api/users")
       .then((res) => {
         if (!res.ok) {
@@ -50,12 +42,69 @@ const AllMembers = () => {
         setError(err.message)
         setLoading(false)
       })
-  }, [handleApprove])
+  }, [])
 
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
 
-  const handleRemove = (userId) => {
-    // Implement remove logic here
-    console.log(`Removed user ${userId}`)
+  const handleApprove = async (userId) => {
+    try {
+      const res = await fetch(`/api/users?email=${userId}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ status: "approved" }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        toast({
+          title: "User Approved",
+          description: `${data.name} has been successfully approved.`,
+          duration: 3000,
+        })
+        fetchUsers() // Refresh the user list
+      } else {
+        throw new Error(data.message || "Failed to approve user")
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+        duration: 3000,
+      })
+    }
+  }
+
+  const handleRemove = async (user) => {
+    if (!user) return
+
+    try {
+      const res = await fetch(`/api/users/${user?._id}`, {
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if (res.ok && data.deletedCount > 0) {
+        toast({
+          title: "User Removed",
+          description: `${user?.name} has been successfully removed.`,
+          duration: 3000,
+        })
+        setUserToRemove(null)
+        fetchUsers() // Refresh the user list
+      } else {
+        throw new Error(data.message || "Failed to remove user")
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+        duration: 3000,
+      })
+    }
   }
 
   if (loading) {
@@ -105,9 +154,9 @@ const AllMembers = () => {
                   <TableCell>{user.city}</TableCell>
                   <TableCell>{new Date(user.dob).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <Dialog >
+                    <Dialog>
                       <DialogTrigger asChild>
-                        <Button className='border border-yellow-400 text-yellow-400' variant="outline" size="sm">
+                        <Button className="border border-yellow-400 text-yellow-400" variant="outline" size="sm">
                           <Info className="h-4 w-4 mr-2" />
                           View
                         </Button>
@@ -121,13 +170,10 @@ const AllMembers = () => {
                     </Dialog>
                   </TableCell>
                   <TableCell>
-                
-                      {
-                        user.role === 'admin' ? (
-                            <h4 className="text-gray-800 font-semibold">This is admin</h4>
-                        ) : (
-                            !user?.status ? (
-                                <Button
+                    {user.role === "admin" ? (
+                      <span className="text-gray-800 font-semibold">Admin</span>
+                    ) : !user?.status ? (
+                      <Button
                         onClick={() => handleApprove(user.email)}
                         size="sm"
                         className="bg-green-500 hover:bg-green-600"
@@ -135,23 +181,39 @@ const AllMembers = () => {
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Approve {user?.role} request
                       </Button>
-                            ) : (
-                                <h4 className="text-gray-800 font-semibold">{user?.role}</h4>
-                            )
-                        )
-                      }
-                      </TableCell>
-                      <TableCell>
-                      <Button onClick={() => handleRemove(user.email)} size="sm" variant="destructive">
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Remove
-                      </Button>
+                    ) : (
+                      <span className="text-gray-800 font-semibold capitalize">{user?.role}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Remove
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Confirm Removal</DialogTitle>
+                          <DialogDescription>
+                            Are you sure you want to remove {user.name}? This action cannot be undone.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button variant="destructive" onClick={() => handleRemove(user)}>
+                            Confirm Remove
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </div>
+      <Toaster />
     </motion.div>
   )
 }
