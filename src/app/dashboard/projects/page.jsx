@@ -9,56 +9,57 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Loader2, Plus, Edit, Trash } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { ProjectForm } from "@/components/ProjectForm/ProjectForm"
 
-const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initialData || {},
-  })
+// const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
+//   const {
+//     register,
+//     handleSubmit,
+//     reset,
+//     formState: { errors },
+//   } = useForm({
+//     defaultValues: initialData || {},
+//   })
 
-  const submitHandler = (data) => {
-    onSubmit(data)
-    if (!initialData) reset() // Only reset if it's a new project form
-  }
+//   const submitHandler = (data) => {
+//     onSubmit(data)
+//     if (!initialData) reset() // Only reset if it's a new project form
+//   }
 
-  return (
-    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
-      <Input {...register("title", { required: "Title is required" })} defaultValue={initialData?.title} placeholder="Project Title" />
-      {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+//   return (
+//     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
+//       <Input {...register("title", { required: "Title is required" })} defaultValue={initialData?.title} placeholder="Project Title" />
+//       {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
 
-      <Textarea
-        {...register("description", { required: "Description is required" })}
-        placeholder="Project Description"
-        defaultValue={initialData?.description}
-      />
-      {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+//       <Textarea
+//         {...register("description", { required: "Description is required" })}
+//         placeholder="Project Description"
+//         defaultValue={initialData?.description}
+//       />
+//       {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
 
-      <Input
-        {...register("goal", {
-          required: "Goal amount is required",
-          pattern: { value: /^\d+$/, message: "Please enter a valid number" },
-        })}
-        placeholder="Goal Amount"
-        type="number"
-        defaultValue={initialData?.goal}
-      />
-      {errors.goal && <p className="text-red-500 text-sm">{errors.goal.message}</p>}
+//       <Input
+//         {...register("goal", {
+//           required: "Goal amount is required",
+//           pattern: { value: /^\d+$/, message: "Please enter a valid number" },
+//         })}
+//         placeholder="Goal Amount"
+//         type="number"
+//         defaultValue={initialData?.goal}
+//       />
+//       {errors.goal && <p className="text-red-500 text-sm">{errors.goal.message}</p>}
 
-      <div className="flex justify-end space-x-2">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-        )}
-        <Button type="submit">{initialData ? "Update Project" : "Add Project"}</Button>
-      </div>
-    </form>
-  )
-}
+//       <div className="flex justify-end space-x-2">
+//         {onCancel && (
+//           <Button type="button" variant="outline" onClick={onCancel}>
+//             Cancel
+//           </Button>
+//         )}
+//         <Button type="submit">{initialData ? "Update Project" : "Add Project"}</Button>
+//       </div>
+//     </form>
+//   )
+// }
 
 const ProjectCard = ({ project, onEdit, onDelete }) => (
   <motion.div
