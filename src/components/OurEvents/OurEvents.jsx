@@ -31,7 +31,7 @@ export default function OurEvents() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4 text-gray-800">Our Events</h2>
+          <h2 className="text-4xl font-bold mb-4 text-gray-800">Our Projects</h2>
           <h4 className="text-2xl font-thin text-center text-slate-950 mt-2 md:mt-4">
         These are two main way to share smile with everyone where financial or
         other conditions are not the question
