@@ -39,9 +39,9 @@ import { useToast } from "@/hooks/use-toast";
 
 const EventForm = ({
   onSubmit,
-  initialData = null,
+  initialData,
   projects,
-  onCancel = null,
+  onCancel,
 }) => {
   const {
     register,
@@ -57,7 +57,9 @@ const EventForm = ({
     onSubmit(data);
     if (!initialData) reset(); // Only reset if it's a new event form
   };
-
+  useEffect(() => {
+    reset(initialData || {}); // ✅ Reset form when editingEvent changes
+  }, [initialData, reset]);
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <Input
@@ -176,17 +178,32 @@ const EventForm = ({
           {errors.totalDistribution.message}
         </p>
       )}
-
-      <div className="flex justify-end space-x-2">
+    {
+        initialData ? (
+            <div className="flex justify-start space-x-2">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
         )}
         <Button type="submit">
-          {initialData ? "Update Event" : "Add Event"}
+          Update Event
         </Button>
       </div>
+        ) : (
+            <div className="flex justify-end space-x-2">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+        <Button type="submit">
+          Add Event
+        </Button>
+      </div>
+        )
+    }
+      
     </form>
   );
 };
@@ -306,6 +323,7 @@ const ManageEventsPage = () => {
           title: "Success",
           description: "Event added successfully!",
         });
+        setIsAddEventDialogOpen(false)
       }
     } catch (err) {
       toast({
@@ -331,6 +349,7 @@ const ManageEventsPage = () => {
           title: "Success",
           description: "Event updated successfully!",
         });
+        setEditingEvent(null);
       }
     } catch (err) {
       toast({
