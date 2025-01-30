@@ -39,7 +39,7 @@ const ProjectsPage = () => {
   }
 
   const handleAddProject = async (projectData) => {
-    // console.log(projectData)
+    console.log(projectData)
     try {
       const response = await fetch("/api/projects", {
         method: "POST",

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Label } from "../ui/label"
 import { Card, CardContent } from "../ui/card"
 import { X, Upload } from "lucide-react"
+import { uploadImage } from "@/lib/funcs"
 
 export const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
   const [previewImage, setPreviewImage] = useState(initialData?.coverImage || null)
@@ -57,21 +58,36 @@ export const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
     }
   }
 
-  const submitHandler = (data) => {
-    const formData = new FormData()
+  const submitHandler = async (data) => {
+    const formData = new FormData();
+    
+    if (data.coverImage instanceof File) {
+      try {
+        const imageUrl = await uploadImage(data.coverImage);
+        formData.append("coverImage", imageUrl);
+      } catch (error) {
+        console.error("Image upload failed", error);
+        return;
+      }
+    } else {
+      formData.append("coverImage", data.coverImage);
+    }
+  
+    // Append other form fields
     for (const key in data) {
-      if (key === "coverImage" && data[key]) {
-        formData.append(key, data[key])
-      } else {
-        formData.append(key, data[key])
+      if (key !== "coverImage") {
+        formData.append(key, data[key]);
       }
     }
-    onSubmit(formData)
+  // console.log(Object.fromEntries(formData.entries()))
+    onSubmit(Object.fromEntries(formData.entries()));
+  
     if (!initialData) {
-      reset()
-      setPreviewImage(null)
+      reset();
+      setPreviewImage(null);
     }
-  }
+  };
+  
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
