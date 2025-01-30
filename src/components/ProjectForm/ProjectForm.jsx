@@ -81,11 +81,8 @@ export const ProjectForm = ({ onSubmit, initialData, onCancel = null }) => {
     }
   // console.log(Object.fromEntries(formData.entries()))
     onSubmit(Object.fromEntries(formData.entries()));
-  
-    if (!initialData) {
-      reset();
-      setPreviewImage(null);
-    }
+    reset();
+    setPreviewImage(null);
   };
   
 

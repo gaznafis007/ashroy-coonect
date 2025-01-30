@@ -21,7 +21,7 @@ export const PUT = async (req, { params }) => {
     if (!event) {
       return NextResponse.json({ message: "nothing to edit" });
     } else {
-      const id = params.id;
+      const {id} = await params;
       const query = { _id: new ObjectId(id) };
       const db = await connectDB();
       const eventCollection = await db.collection("events");
