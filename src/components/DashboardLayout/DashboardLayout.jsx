@@ -8,7 +8,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 
 
-
+const adminItems = [
+  { icon: Home, label: "Overview", href: "/dashboard" },
+  { icon: Users, label: "All Members", href: "/dashboard/allMembers" },
+  { icon: Calendar, label: "Events", href: "/dashboard/manageEvents" },
+  { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
+  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+];
 const dashboardItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
     { icon: Users, label: "Community", href: "/dashboard/community" },
@@ -41,7 +47,8 @@ const DashboardLayout = ({ children, user }) => {
           </Button>
         </div>
         <nav className="mt-8">
-          {dashboardItems.map((item) => (
+        {
+          user?.role === 'admin' ? (adminItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -52,8 +59,22 @@ const DashboardLayout = ({ children, user }) => {
               <item.icon className="h-5 w-5 mr-3" />
               {item.label}
             </Link>
-          ))}
-        </nav>
+          )))
+          :
+          (dashboardItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center px-4 py-3 text-white hover:bg-yellow-600 ${
+                router.pathname === item.href ? "bg-yellow-600" : ""
+              }`}
+            >
+              <item.icon className="h-5 w-5 mr-3" />
+              {item.label}
+            </Link>
+          )))
+        }
+      </nav>
         <div className="absolute bottom-0 w-full p-4">
           <Button
             variant="outline"
