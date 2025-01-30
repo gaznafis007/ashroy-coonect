@@ -13,14 +13,14 @@ const adminItems = [
   { icon: Users, label: "All Members", href: "/dashboard/allMembers" },
   { icon: Calendar, label: "Events", href: "/dashboard/manageEvents" },
   { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
-  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+  { icon: Settings, label: "Feedback", href: "/dashboard/feedback" },
 ];
 const dashboardItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
     { icon: Users, label: "Community", href: "/dashboard/community" },
     { icon: Calendar, label: "Events", href: "/events" },
     { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
-    { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+    { icon: Settings, label: "Feedback", href: "/dashboard/feedback" },
   ]
 const DashboardLayout = ({ children, user }) => {
   const router = useRouter()
