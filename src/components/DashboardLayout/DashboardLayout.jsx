@@ -18,7 +18,7 @@ const adminItems = [
 const dashboardItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
     { icon: Users, label: "Community", href: "/dashboard/community" },
-    { icon: Calendar, label: "Events", href: "/dashboard/events" },
+    { icon: Calendar, label: "Events", href: "/events" },
     { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
   ]

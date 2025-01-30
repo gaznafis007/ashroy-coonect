@@ -28,7 +28,7 @@ const adminItems = [
 const dashboardItems = [
   { icon: Home, label: "Overview", href: "/dashboard" },
   { icon: Users, label: "Community", href: "/dashboard/blogs" },
-  { icon: Calendar, label: "Events", href: "/dashboard/events" },
+  { icon: Calendar, label: "Events", href: "/events" },
   { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
 ];
 const handleSignOut = () => {

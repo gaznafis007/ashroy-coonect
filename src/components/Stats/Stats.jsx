@@ -1,16 +1,45 @@
 "use client"
 import { motion } from "framer-motion"
 import CounterEffect from "../CounterEffect/CounterEffect"
+import { useEffect, useState } from "react"
 
 
-const stats = [
-  { label: "Lives Impacted", value:10000 },
-  { label: "Volunteers", value: 500 },
-  { label: "Projects Completed", value: 100 },
-  { label: "Communities Served", value: 50 },
-]
+
 
 export default function Stats() {
+  const [events, setEvents] = useState(null)
+  const [projects, setProjects] = useState(null);
+  const [volunteers, setVolunteers] = useState(null);
+  const [contribution, setContributions] = useState(null);
+  const fetchEvents = async () =>{
+    const response = await fetch("/api/manageEvents");
+    const data = await response.json();
+    setEvents(data.length);
+    const helped = data.reduce((sum, item) => sum + (parseFloat(item?.totalDistribution) || 0), 0);
+    setContributions(helped)
+  }
+  const fetchProjects = async() =>{
+    const response = await fetch("/api/projects");
+    const data = await response.json();
+    setProjects(data.length);
+  }
+  const fetchUsers = async() =>{
+    const response = await fetch("/api/users");
+    const data = await response.json();
+    const items = data.filter(item => item?.role === 'volunteer')
+    setVolunteers(items.length);
+  }
+  useEffect(() =>{
+    fetchEvents();
+    fetchProjects()
+    fetchUsers()
+  },[])
+  const stats = [
+    { label: "Lives Impacted", value:contribution },
+    { label: "Volunteers", value: volunteers },
+    { label: "Total projects", value: projects },
+    { label: "Communities Served", value: events },
+  ]
   return (
     <section id="impact" className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -27,7 +56,7 @@ export default function Stats() {
               <div className="text-4xl font-bold text-yellow-400 mb-2">
                 <CounterEffect target={stat?.value} duration={1}/>
               </div>
-              <p className="text-gray-600">{stat.label}</p>
+              <p className="text-gray-600 font-semibold">{stat.label}</p>
             </motion.div>
           ))}
         </div>

@@ -160,7 +160,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
           <p className="text-sm font-semibold mb-1">Project: {event?.project || "Unknown"}</p>
           <p className="text-sm mb-1">Date: {new Date(event.eventDate).toLocaleDateString()}</p>
           <p className="text-sm mb-1">Funds Raised: ${event.totalFundRaised}</p>
-          <p className="text-sm">Distribution: ${event.totalDistribution}</p>
+          <p className="text-sm">Distribution: {event.totalDistribution}</p>
         </CardContent>
         <CardFooter className="justify-end space-x-2">
           <Button variant="outline" size="icon" onClick={() => onEdit(event)}>
