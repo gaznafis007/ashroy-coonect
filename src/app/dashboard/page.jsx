@@ -282,9 +282,9 @@ const Dashboard = () => {
 
                 {user?.role === "admin" && (
                   <>
-                    <Button>Create New Event</Button>
+                    <Button handler={() => router.push("/dashboard/manageEvents")}>Create New Event</Button>
                     <Button handler={() => router.push("/dashboard/projects")}>Create New Project</Button>
-                    <Button>Create Upcoming Event</Button>
+                    <Button handler={() => router.push("/dashboard/manageEvents")}>Create Upcoming Event</Button>
                     <Button
                       handler={() => router.push("/dashboard/allMembers")}
                     >
