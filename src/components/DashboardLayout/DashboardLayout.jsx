@@ -2,7 +2,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Home, Users, Calendar, BarChart, Settings, LogOut, Menu, X } from "lucide-react"
+import { Home, Users, Calendar, BarChart, Settings, LogOut, Menu, X, MessageSquareHeart } from "lucide-react"
 
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
@@ -13,14 +13,14 @@ const adminItems = [
   { icon: Users, label: "All Members", href: "/dashboard/allMembers" },
   { icon: Calendar, label: "Events", href: "/dashboard/manageEvents" },
   { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
-  { icon: Settings, label: "Feedback", href: "/dashboard/feedback" },
+  { icon: MessageSquareHeart, label: "Feedback", href: "/dashboard/feedback" },
 ];
 const dashboardItems = [
     { icon: Home, label: "Overview", href: "/dashboard" },
-    { icon: Users, label: "Community", href: "/dashboard/community" },
+    { icon: Users, label: "Community", href: "/blog" },
     { icon: Calendar, label: "Events", href: "/events" },
     { icon: BarChart, label: "Impact", href: "/dashboard/impact" },
-    { icon: Settings, label: "Feedback", href: "/dashboard/feedback" },
+    { icon: MessageSquareHeart, label: "Feedback", href: "/dashboard/feedback" },
   ]
 const DashboardLayout = ({ children, user }) => {
   const router = useRouter()
