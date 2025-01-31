@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Loader2, Calendar, DollarSign, Users } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const formatDate = (dateString) => {
   const options = { year: "numeric", month: "long", day: "numeric" }
@@ -14,8 +15,8 @@ const formatDate = (dateString) => {
 }
 
 const EventCard = ({ event }) => {
-  const [isOpen, setIsOpen] = useState(false)
 
+  const router = useRouter()
   return (
     <motion.div
       layout
@@ -48,38 +49,9 @@ const EventCard = ({ event }) => {
           </div>
         </CardContent>
         <CardFooter>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="w-full">
+        <Button onClick={() => router.push(`/events/${event?._id}`)} variant="outline" className="w-full">
                 View Details
               </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{event.title}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <p>
-                  <strong>Description:</strong> {event.description}
-                </p>
-                <p>
-                  <strong>Project:</strong> {event.project}
-                </p>
-                <p>
-                  <strong>Date:</strong> {formatDate(event.eventDate)}
-                </p>
-                <p>
-                  <strong>Status:</strong> {event.status}
-                </p>
-                <p>
-                  <strong>Total Fund Raised:</strong> ${event.totalFundRaised}
-                </p>
-                <p>
-                  <strong>Total Distribution:</strong> {event.totalDistribution}
-                </p>
-              </div>
-            </DialogContent>
-          </Dialog>
         </CardFooter>
       </Card>
     </motion.div>

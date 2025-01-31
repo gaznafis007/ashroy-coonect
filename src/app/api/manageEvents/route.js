@@ -22,12 +22,18 @@ export const GET = async (req) =>{
     try{
         const {searchParams} = new URL(req.url);
         const title = searchParams.get('title');
+        const project = searchParams.get('project')
         let query = {}
         const db = await connectDB();
         const eventCollection = await db.collection('events');
         if(title){
             query = {title: title}
             const result = await eventCollection.findOne(query);
+            return NextResponse.json(result);
+        }     
+        if(project){
+            query = {project: project}
+            const result = await eventCollection.find(query).toArray();
             return NextResponse.json(result);
         }     
         const result = await eventCollection.find(query).toArray();
