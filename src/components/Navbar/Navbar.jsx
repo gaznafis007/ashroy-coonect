@@ -1,70 +1,150 @@
 "use client";
+
 import Link from "next/link";
-import React, { useState } from "react";
-import Button from "../Button/Button";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { navItems } from "@/variables/variables";
-import { FaBars } from "react-icons/fa";
-import Modal from "../Modal/Modal";
 import { signOut, useSession } from "next-auth/react";
+import { Menu, Home, LogOut, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { navItems } from "@/variables/variables";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
   const session = useSession();
-  // console.log(session)
-  const handleInvolve = () =>{
-    router.push('/login')
-  }
   const pathname = usePathname();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+
+  const handleInvolve = () => {
+    router.push('/login');
+  };
+
+  if (pathname === '/dashboard') return null;
+
   return (
-    <nav className={`items-center justify-between px-6 py-3 ${pathname === '/dashboard' ? 'hidden' : 'flex flex-row '}`}>
-      <Link href={'/'} className="text-4xl text-yellow-400 font-semibold">Ashroy</Link>
-      <div className="hidden md:block space-x-3">
-        {navItems.map((item, idx) => (
-          <Link
-            key={idx}
-            href={item?.path}
-            className="text-slate-800 hover:text-yellow-400 font-semibold"
+    <nav className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <Link 
+            href={'/'} 
+            className="flex items-center space-x-2 text-yellow-400"
           >
-            {item?.name}
+            {/* <Home className="h-6 w-6" /> */}
+            <Image alt="logo" width={50} height={50} src={'/ashroy.jpg'}/>
+            <span className="text-2xl font-bold">Ashroy</span>
           </Link>
-        ))}
-      </div>
-      <div className="hidden md:block">
-      {
-          session?.status === 'authenticated' ? (
-            <div className="flex flex-row space-x-2 items-center">
-            <Link href={'/dashboard'} className="font-semibold capitalize hover:text-yellow-400">{session?.data?.user?.name}</Link>
-            <Button handler={signOut}>Log out</Button>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:space-x-8">
+            <div className="flex space-x-6">
+              {navItems.map((item, idx) => (
+                <Link
+                  key={idx}
+                  href={item?.path}
+                  className="text-slate-600 hover:text-yellow-400 transition-colors font-medium"
+                >
+                  {item?.name}
+                </Link>
+              ))}
             </div>
-          ) : <Button handler={handleInvolve}>Get Involved</Button>
-        }
-      </div>
-      <FaBars onClick={() =>setOpen(true)} className="text-xl text-yellow-400 cursor-pointer md:hidden"/>
-    {
-        open && <Modal setOpen={setOpen} position={'top-4 right-4 z-20'}>
-            <div className="flex flex-col space-y-3">
-        {navItems.map((item, idx) => (
-          <Link
-            key={idx}
-            href={item?.path}
-            className="text-slate-800 hover:text-yellow-400 font-semibold"
-          >
-            {item?.name}
-          </Link>
-        ))}
-        {
-          session?.status === 'authenticated' ? (
-            <div className="flex flex-col space-y-2">
-            <Link href={'/dashboard'} className="font-semibold capitalize hover:text-yellow-400">{session?.data?.user?.name}</Link>
-            <Button handler={signOut}>Log out</Button>
+
+            <div className="flex items-center space-x-4">
+              {session?.status === 'authenticated' ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-2">
+                      <span className="font-medium capitalize">{session?.data?.user?.name}</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()} className="text-red-600">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button 
+                  onClick={handleInvolve}
+                  className="bg-yellow-400 text-white hover:bg-yellow-500"
+                >
+                  Get Involved
+                </Button>
+              )}
             </div>
-          ) : <Button handler={handleInvolve}>Get Involved</Button>
-        }
+          </div>
+
+          {/* Mobile Navigation */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <div className="flex flex-col space-y-4 mt-6">
+                {navItems.map((item, idx) => (
+                  <Link
+                    key={idx}
+                    href={item?.path}
+                    onClick={() => setOpen(false)}
+                    className="text-slate-600 hover:text-yellow-400 transition-colors font-medium py-2"
+                  >
+                    {item?.name}
+                  </Link>
+                ))}
+                {session?.status === 'authenticated' ? (
+                  <div className="flex flex-col space-y-4 pt-4 border-t">
+                    <Link 
+                      href="/dashboard"
+                      onClick={() => setOpen(false)}
+                      className="font-medium capitalize text-slate-600 hover:text-yellow-400"
+                    >
+                      {session?.data?.user?.name}
+                    </Link>
+                    <Button 
+                      onClick={() => {
+                        signOut();
+                        setOpen(false);
+                      }}
+                      variant="destructive"
+                      className="w-full"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Log out
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={() => {
+                      handleInvolve();
+                      setOpen(false);
+                    }}
+                    className="bg-yellow-400 text-white hover:bg-yellow-500 w-full mt-4"
+                  >
+                    Get Involved
+                  </Button>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-        </Modal>
-    }
     </nav>
   );
 };

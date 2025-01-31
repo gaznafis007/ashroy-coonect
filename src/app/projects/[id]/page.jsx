@@ -8,7 +8,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
 
 const ProjectDetails =() => {
@@ -16,7 +16,7 @@ const ProjectDetails =() => {
   const [project, setProject] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
+  const router = useRouter()
   useEffect(() => {
     fetch(`/api/projects/${params.id}`)
       .then((res) => {
@@ -141,7 +141,7 @@ const ProjectDetails =() => {
                   <CardDescription>Make a difference today</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full" size="lg">
+                  <Button onClick={() => router.push('/donate')} className="w-full" size="lg">
                     <Gift className="mr-2 h-5 w-5" />
                     Donate Now
                   </Button>

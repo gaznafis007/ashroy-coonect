@@ -45,7 +45,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100 p-4">
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="inset-0 overflow-hidden">
       </div>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -55,7 +55,7 @@ const Login = () => {
       >
         <Card className="backdrop-blur-sm bg-white/80 shadow-2xl border-0">
           <CardHeader className="text-center relative overflow-hidden pb-16">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-amber-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-md"></div>
             <motion.div
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}

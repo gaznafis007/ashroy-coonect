@@ -102,12 +102,12 @@ const Dashboard = () => {
     },
     {
       name: "add new project",
-      path: "/dashboard/newProject",
+      path: "/dashboard/projects",
       icon: FolderPlus,
     },
     {
       name: "add new event",
-      path: "/dashboard/newEvent",
+      path: "/dashboard/manageEvents",
       icon: CalendarPlus,
     },
     {
@@ -270,7 +270,7 @@ const Dashboard = () => {
                     <Button handler={() => router.push("/dashboard/projects")}>Create New Project</Button>
                     <Button handler={() => router.push("/dashboard/manageEvents")}>Create Upcoming Event</Button>
                     <Button handler={() => router.push("/dashboard/allMembers")}>Manage All Members</Button>
-                    <Button>Generate Reports</Button>
+                    <Button handler={() => router.push("/dashboard/impact")}>Generate Reports</Button>
                   </>
                 )}
                 {user?.role === "sponsor" && user?.status === "approved" && (

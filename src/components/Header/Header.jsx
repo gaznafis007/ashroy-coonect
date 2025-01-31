@@ -1,9 +1,11 @@
 "use client"
 import { motion } from "framer-motion"
 import Button from "../Button/Button"
+import { useRouter } from "next/navigation"
 
 
 export default function Hero() {
+  const router = useRouter()
   return (
     // <section className="bg-primary text-primary-foreground py-20">
     //   <div className="container mx-auto px-4">
@@ -57,7 +59,7 @@ export default function Hero() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white text-xl px-10 py-6 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105">
+        <Button onClick={() => router.push('/login')} size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white text-xl px-10 py-6 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105">
           Join Our Cause
         </Button>
       </motion.div>
