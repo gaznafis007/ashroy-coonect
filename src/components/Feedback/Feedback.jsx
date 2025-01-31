@@ -77,7 +77,7 @@ const Feedback = () => {
             <Card className="max-w-5xl mx-auto shadow-xl border-0 overflow-hidden bg-white/80 backdrop-blur-sm">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400"></div>
               <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-8">
                   <div className="w-full md:w-1/2">
                     <motion.div
                       initial={{ scale: 0 }}

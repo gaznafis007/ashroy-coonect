@@ -100,13 +100,13 @@ const OurEvents = () => {
                       <CardTitle className="text-2xl font-bold text-gray-800">
                         {event.title}
                       </CardTitle>
-                      <p className="text-sm text-gray-600">{event.eventDate}</p>
+                      <p className="text-sm text-gray-600">{event.subheading}</p>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-8">
                   <p className="text-gray-700 leading-relaxed">
-                    {event.motivation}
+                    {event.motivation.slice(0, 150)}...
                   </p>
                   <Link
                     href={`/projects/${event._id}`}
