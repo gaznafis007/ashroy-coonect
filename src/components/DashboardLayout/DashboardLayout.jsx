@@ -78,7 +78,7 @@ const DashboardLayout = ({ children, user }) => {
         <div className="absolute bottom-0 w-full p-4">
           <Button
             variant="outline"
-            className="w-full text-white border-white hover:bg-yellow-600"
+            className="w-full bg-transparent text-white border-white hover:bg-yellow-600"
             onClick={() => router.push("/logout")}
           >
             <LogOut className="h-5 w-5 mr-2" /> Log Out
@@ -95,12 +95,12 @@ const DashboardLayout = ({ children, user }) => {
             </Button>
             <div className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage src={user.image} alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={user?.image} alt={user?.name} />
+                <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                <p className="text-sm font-medium">{user?.name}</p>
+                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
               </div>
             </div>
           </div>

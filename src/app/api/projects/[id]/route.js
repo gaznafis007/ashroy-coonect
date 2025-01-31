@@ -22,6 +22,14 @@ export const PUT = async (req, {params}) =>{
         return NextResponse.json({error: err.message}, {status: 500})
     }
 }
+export const GET = async(req,{params}) =>{
+    const id =  params.id;
+    const query = {_id: new ObjectId(id)}
+    const db = await connectDB();
+    const projectCollection = await db.collection('projects');
+    const result = projectCollection.findOne(query);
+    return NextResponse.json(result)
+}
 export const DELETE = async(req,{params}) =>{
     const id =  params.id;
     const query = {_id: new ObjectId(id)}
