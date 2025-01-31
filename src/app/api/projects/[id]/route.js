@@ -23,18 +23,20 @@ export const PUT = async (req, {params}) =>{
     }
 }
 export const GET = async(req,{params}) =>{
-    const id =  params.id;
+    const {id} =  await params;
+    // console.log(id)
     const query = {_id: new ObjectId(id)}
     const db = await connectDB();
     const projectCollection = await db.collection('projects');
-    const result = projectCollection.findOne(query);
+    const result = await projectCollection.findOne(query);
+    // console.log(result);
     return NextResponse.json(result)
 }
 export const DELETE = async(req,{params}) =>{
-    const id =  params.id;
+    const {id} =  await params;
     const query = {_id: new ObjectId(id)}
     const db = await connectDB();
     const projectCollection = await db.collection('projects');
-    const result = projectCollection.deleteOne(query);
+    const result = await projectCollection.deleteOne(query);
     return NextResponse.json(result)
 }
