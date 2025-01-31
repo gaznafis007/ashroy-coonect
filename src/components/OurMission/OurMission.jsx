@@ -12,7 +12,7 @@ const missionPoints = [
 
 export default function OurMission() {
   return (
-    <section id="mission" className="py-24 bg-gradient-to-b from-white to-gray-100">
+    <section id="mission" className="py-24 bg-gradient-to-b from-white to-yellow-100">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

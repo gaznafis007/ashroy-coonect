@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 const StoriesPage = () => {
   const [stories, setStories] = useState([])
   const [loading, setLoading] = useState(true)
+  const [liked, setLiked] = useState(false)
   const { toast } = useToast()
   const {
     register,
@@ -171,9 +172,9 @@ const StoriesPage = () => {
                     <p className="text-gray-700 whitespace-pre-wrap">{story.content}</p>
                   </CardContent>
                   <CardFooter className="flex justify-between items-center">
-                    <Button variant="ghost" size="sm">
-                      <Heart className="h-5 w-5 mr-1" />
-                      Like
+                    <Button onClick={() => setLiked(!liked)} variant="ghost" size="sm">
+                      <Heart className={`h-5 w-5 mr-1 ${liked ? 'text-red-600' : ''}`} />
+                      {liked ? 'Liked' : 'Like'}
                     </Button>
                     <Button variant="ghost" size="sm">
                       <MessageCircle className="h-5 w-5 mr-1" />

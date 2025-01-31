@@ -17,11 +17,13 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Ashroy-Connect",
   description: "A non profit organization",
+  icon: '/public/favicon.svg'
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >

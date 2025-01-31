@@ -48,7 +48,11 @@ const handler = NextAuth({
         const query = { email: user?.email };
         const registeredUser = await userCollection.findOne(query);
         if (!registeredUser) {
-          const result = await userCollection.insertOne(user);
+          const newUser = {
+            ...user,
+            role: 'volunteer'
+          }
+          const result = await userCollection.insertOne(newUser);
           if (result.acknowledged) {
             return true;
           }else{
