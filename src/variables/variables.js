@@ -9,7 +9,7 @@ export const navItems = [
     },
     {
       name: "Stories",
-      path: "/",
+      path: "/stories",
     },
     {
       name: "Donate",
