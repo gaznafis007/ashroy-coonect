@@ -2,9 +2,17 @@ import { connectDB } from "@/lib/connectDB";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
+export const GET = async (req, {params}) =>{
+  const {id} = await params;
+  const db = await connectDB();
+  const eventCollection = await db.collection("events");
+  const query = {_id: new ObjectId(id)};
+  const result = await eventCollection.findOne(query);
+  return NextResponse.json(result)
+}
 export const DELETE = async (req, { params }) => {
   try {
-    const id = params.id;
+    const {id} = await params;
     const query = { _id: new ObjectId(id) };
     const db = await connectDB();
     const eventCollection = await db.collection("events");

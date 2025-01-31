@@ -1,8 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useForm, Controller } from "react-hook-form"
+import { useDropzone } from "react-dropzone"
+import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,10 +13,52 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Loader2, Plus, Edit, Trash, CalendarIcon } from "lucide-react"
+import { Loader2, Plus, Edit, Trash, CalendarIcon, X } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { uploadImage, uploadImages } from "@/lib/funcs"
+
+const ImageDropzone = ({ onDrop, files, removeFile, multiple = false }) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+    multiple,
+  })
+
+  return (
+    <div>
+      <div
+        {...getRootProps()}
+        className={`border-2 border-dashed rounded-md p-4 ${isDragActive ? "border-blue-500" : "border-gray-300"}`}
+      >
+        <input {...getInputProps()} />
+        <p className="text-center text-gray-500">Drag 'n' drop some files here, or click to select files</p>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {files.map((file, index) => (
+          <div key={index} className="relative">
+            <Image
+              src={URL.createObjectURL(file) || "/placeholder.svg"}
+              alt="Uploaded image"
+              width={100}
+              height={100}
+              className="rounded-md"
+            />
+            <button
+              onClick={() => removeFile(index)}
+              className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
+  const [images, setImages] = useState([])
+  const [image, setImage] = useState(null)
   const {
     register,
     handleSubmit,
@@ -25,13 +69,54 @@ const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
     defaultValues: initialData || {},
   })
 
-  const submitHandler = (data) => {
-    onSubmit(data)
-    if (!initialData) reset() // Only reset if it's a new event form
+  const onDropImages = useCallback((acceptedFiles) => {
+    setImages((prevImages) => [...prevImages, ...acceptedFiles])
+  }, [])
+
+  const onDropImage = useCallback((acceptedFiles) => {
+    setImage(acceptedFiles[0])
+  }, [])
+
+  const removeImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
+  const removeSingleImage = () => {
+    setImage(null)
+  }
+
+
+
+  const submitHandler = async (data) => {
+    try {
+      // Upload images first
+      if (images.length > 0) {
+        data.images = await uploadImages(images);
+      }
+  
+      if (image) {
+        const uploadedCoverImage = await uploadImage(image);
+        data.coverImage = uploadedCoverImage; // Since it's a single image
+      }
+  
+      console.log("Final Form Data:", data);
+  
+      // Submit the final form
+      
+        onSubmit(data);
+        reset();
+        setImages([]);
+        setImage(null);
+
+    } catch (error) {
+      console.error("Error handling form submission:", error);
+    }
+  };
+
   useEffect(() => {
-    reset(initialData || {}) // Reset form when initialData changes
+    reset(initialData || {})
+    setImages([])
+    setImage(null)
   }, [initialData, reset])
 
   return (
@@ -40,7 +125,7 @@ const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
       {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
 
       <Controller
-        name="projectId"
+        name="project"
         control={control}
         rules={{ required: "Project is required" }}
         render={({ field }) => (
@@ -58,7 +143,7 @@ const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
           </Select>
         )}
       />
-      {errors.projectId && <p className="text-red-500 text-sm">{errors.projectId.message}</p>}
+      {errors.project && <p className="text-red-500 text-sm">{errors.project.message}</p>}
 
       <Textarea {...register("description", { required: "Description is required" })} placeholder="Event Description" />
       {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
@@ -76,7 +161,13 @@ const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+              <Calendar
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+                initialFocus
+                className="rounded-md border shadow p-3"
+              />
             </PopoverContent>
           </Popover>
         )}
@@ -121,6 +212,21 @@ const EventForm = ({ onSubmit, initialData, projects, onCancel }) => {
       />
       {errors.totalDistribution && <p className="text-red-500 text-sm">{errors.totalDistribution.message}</p>}
 
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Multiple Images</label>
+        <ImageDropzone onDrop={onDropImages} files={images} removeFile={removeImage} multiple={true} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Single Image</label>
+        <ImageDropzone
+          onDrop={onDropImage}
+          files={image ? [image] : []}
+          removeFile={removeSingleImage}
+          multiple={false}
+        />
+      </div>
+
       <div className="flex justify-end space-x-2">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
@@ -160,7 +266,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
           <p className="text-sm font-semibold mb-1">Project: {event?.project || "Unknown"}</p>
           <p className="text-sm mb-1">Date: {new Date(event.eventDate).toLocaleDateString()}</p>
           <p className="text-sm mb-1">Funds Raised: ${event.totalFundRaised}</p>
-          <p className="text-sm">Distribution: {event.totalDistribution}</p>
+          <p className="text-sm">Distribution: ${event.totalDistribution}</p>
         </CardContent>
         <CardFooter className="justify-end space-x-2">
           <Button variant="outline" size="icon" onClick={() => onEdit(event)}>
@@ -226,8 +332,10 @@ const ManageEventsPage = () => {
     try {
       const response = await fetch("/api/manageEvents", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(eventData), 
       })
       if (!response.ok) throw new Error("Failed to add event")
       const res = await response.json()
@@ -249,16 +357,19 @@ const ManageEventsPage = () => {
   }
 
   const handleUpdateEvent = async (eventData) => {
-    const {_id, ...updateData} = eventData
+    const {_id} = editingEvent
     try {
       const response = await fetch(`/api/manageEvents/${_id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData),
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
       })
-      if (!response.ok) throw new Error("Failed to update event")
+      if (!response.ok) {throw new Error("Failed to update event")}
       const res = await response.json()
+    console.log(res)
       if (res.modifiedCount > 0) {
+        console.log('updated')
         fetchEvents()
         toast({
           title: "Success",
@@ -334,7 +445,7 @@ const ManageEventsPage = () => {
       </div>
 
       <Dialog open={isEventDialogOpen} onOpenChange={setIsEventDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[80vh] overflow-y-auto p-6">
           <DialogHeader>
             <DialogTitle>{editingEvent ? "Edit Event" : "Add New Event"}</DialogTitle>
           </DialogHeader>
