@@ -69,11 +69,10 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 ```bash
 ashroy-coonect/
 │-- components/   # Reusable React components
-│-- pages/        # Next.js Pages (Routes)
-│-- styles/       # Global styles
+│-- src/app/        # Next.js Pages (Routes)
+│-- components/ui/  # Shadcn components
 │-- utils/        # Utility functions
 │-- public/       # Static assets
-│-- prisma/       # Prisma configuration (if using Prisma with MongoDB)
 │-- .env.local    # Environment variables
 │-- next.config.js # Next.js config file
 │-- tailwind.config.js # Tailwind CSS config
