@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Ashroy Connect
 
-## Getting Started
+Ashroy Connect is a non-profit organization platform designed to bring communities together through volunteering, donations, and awareness. The platform enables users to contribute through blogs, participate in events, and manage organizational tasks with an intuitive dashboard.
 
-First, run the development server:
+## 🌟 Features
+
+- 🏡 **Dynamic Home Page** – Showcasing recent events, impact metrics, and calls to action.
+- 📝 **Blog System** – Users can write, read, and comment on blogs.
+- 🔐 **Authentication** – Secure login/signup with **NextAuth**.
+- 🎭 **Animated UI** – Powered by **Framer Motion** for smooth interactions.
+- 🎨 **Modern UI Design** – Built with **Tailwind CSS** and **ShadCN**.
+- 🛠 **Role-Based Dashboard** – Separate panels for Admins, Volunteers, and Sponsors.
+- 📊 **MongoDB Database** – Storing dynamic content efficiently.
+- 📩 **Contact & Support** – Users can reach out for help or inquiries.
+
+---
+
+## 🏗 Tech Stack
+
+- **Frontend:** Next.js, Tailwind CSS, Framer Motion, React Hook Form, ShadCN
+- **Backend:** Next.js API Routes
+- **Database:** MongoDB
+- **Authentication:** NextAuth.js
+- **Hosting:** Vercel
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+Make sure you have **Node.js** and **MongoDB** installed on your system.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone https://github.com/gaznafis007/ashroy-coonect.git
+cd ashroy-coonect
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+# Install dependencies
+yarn install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Environment Setup
+Create a `.env.local` file in the root directory and configure the following variables:
 
-## Learn More
+```env
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_secret_key
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Running the Development Server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📂 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+ashroy-coonect/
+│-- components/   # Reusable React components
+│-- pages/        # Next.js Pages (Routes)
+│-- styles/       # Global styles
+│-- utils/        # Utility functions
+│-- public/       # Static assets
+│-- prisma/       # Prisma configuration (if using Prisma with MongoDB)
+│-- .env.local    # Environment variables
+│-- next.config.js # Next.js config file
+│-- tailwind.config.js # Tailwind CSS config
+```
+
+---
+
+## 🎯 Roadmap
+
+- [ ] Implement real-time chat for volunteers & admins
+- [ ] Add donation tracking system
+- [ ] Enhance accessibility & SEO improvements
+- [ ] Introduce event RSVP feature
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to fork the repo and submit a pull request.
+
+```bash
+# Create a new branch
+git checkout -b feature-branch
+
+# Commit changes
+git commit -m "Add new feature"
+
+# Push to GitHub
+git push origin feature-branch
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 📞 Contact
+
+Developed by **Gazi Nafis Md Abdullah**  
+GitHub: [gaznafis007](https://github.com/gaznafis007)  
+Website: [ashroy-coonect.vercel.app](https://ashroy-coonect.vercel.app/)

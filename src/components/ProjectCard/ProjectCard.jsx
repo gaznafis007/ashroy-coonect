@@ -3,9 +3,10 @@ import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
 import { Edit, Trash } from "lucide-react"
+import Link from "next/link"
 
 export const ProjectCard = ({ project, onEdit, onDelete }) => {
-  console.log(project)
+  
   return (
   
   <motion.div
@@ -37,9 +38,11 @@ export const ProjectCard = ({ project, onEdit, onDelete }) => {
         </div>
       </CardContent>
       <CardFooter className="justify-between items-center">
+        <Link href={`/projects/${project?._id}`}>
         <Button variant="outline" size="sm">
           Learn More
         </Button>
+        </Link>
         <div className="flex space-x-2">
           <Button variant="outline" size="icon" onClick={() => onEdit(project)}>
             <Edit className="h-4 w-4" />
